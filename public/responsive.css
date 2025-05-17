@@ -1,0 +1,25 @@
+@media only screen and (max-width: 1200px) {
+
+}
+@media only screen and (max-width: 600px) {
+    .task .incomplete-button-container {
+        width: 85%;
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    //margin-bottom: 20px;
+        padding-top: 1rem;
+        position: fixed;
+        z-index: 1;
+        width: 100%;
+        padding-right: 22px;
+        padding-left: 20px;
+        background: #D0E1F1;
+    }
+
+}
+
+
+
