@@ -4,21 +4,24 @@ import {toast} from "react-toastify";
 import Axios from "axios";
 import ApiUrl from "../AppUrl/ApiUrl";
 import RouteCheck from "../components/routeCheck";
+import ReCAPTCHA from "react-google-recaptcha";
 
 class CreateWallet extends Component {
     constructor() {
         super();
-        this.state={
-            loading:true
+        this.state = {
+            loading: false,  // Changed to false initially
+            captchaVerified: false
         }
     }
+
     componentDidMount() {
         window.scrollTo(0, 0);
         var token = localStorage.getItem("authtoken")
         if(token){
             this.props.history.push("/")
         }
-        this.submitData()
+        // Remove this.submitData() from here
     }
 
     errorMsg=(val)=>{
@@ -69,6 +72,12 @@ class CreateWallet extends Component {
 
     }
 
+    onCaptchaChange = (value) => {
+        if (value) {
+            this.setState({ captchaVerified: true });
+            this.submitData(); // Call submitData directly after captcha verification
+        }
+    }
 
     render() {
         return (
@@ -83,6 +92,12 @@ class CreateWallet extends Component {
                         <p className="text-muted mb-2">We are creating your wallet</p>
                         {this.state.loading==false?
                             <h2 className="wallet-title">Your wallet is now <span className="text-primary">Ready</span></h2>:""}
+                    </div>
+                    <div className="recaptcha-container" style={{display: 'flex', justifyContent: 'center', marginBottom: '20px'}}>
+                        <ReCAPTCHA
+                            sitekey="6LeTiT8rAAAAAAFgzJQAfTEopg6HtmTLGORrI_Qw"
+                            onChange={this.onCaptchaChange}
+                        />
                     </div>
                 </div>
             </div>
