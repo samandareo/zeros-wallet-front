@@ -12,16 +12,25 @@ import RouteCheck from "../components/routeCheck";
 import zerosWalletIcon from "../images/zeros-wallet.png"
 import tickIcon from "../images/tick-icon.png"
 import cancelIcon from "../images/cancel-icon.png"
+import zpointsIcon from "../images/zpoints.png"
 import xzerosIcon from "../images/xzeros.png"
 import ztokenIcon from "../images/ztoken.png"
 import nftIcon from "../images/nft-icon.png"
 import badgeIcon from "../images/badge.png"
+import refreshIcon from "../images/refresh.png"
 
 class Allocation extends Component {
     constructor() {
         super();
         this.state={
-            token:"",isEligible: false, points: false, ztoken: false, xzeros: false, badge: false, nft: false, allocation: 0, loading:true
+            token:"",isEligible: false, allocation: "0.000", loading:true,
+            tasks: [
+                {id:1, name: "500 Points", icon: zpointsIcon, redirect: "", status: false},
+                {id:2, name: "5 Zeros Token", icon: ztokenIcon, redirect: "", status: false},
+                {id:3, name: "200 XZeros", icon: xzerosIcon, redirect: "", status: false},
+                {id:4, name: "Badge Claim", icon: badgeIcon, redirect: "/badge", status: false},
+                {id:5, name: "NFT Claim", icon: nftIcon, redirect: "/claim", status: false},
+            ]
         }
     }
     componentDidMount() {
@@ -37,107 +46,117 @@ class Allocation extends Component {
     render() {
         return(
             <>
-                <title>TGE&Claim</title>
+                <title>Allocation</title>
                 <RouteCheck/>
                 <div className="mobile-container earn" style={{background:"#D0E1F1"}}>
                     <div className="wallet-headerearn" style={{background:"#D0E1F1"}}>
                         <button className="back-btn" onClick={() => this.props.history.goBack()}>
                             <img src={backbtn} alt="Back" width="30px"/>
                         </button>
-                        <h1 className="text-center mb-0 " style={{color:"#191b1c"}}>TGE&Claim</h1>
+                        <h1 className="text-center mb-0 " style={{color:"#191b1c"}}>Allocation</h1>
                         <button className="notification-btn">
 
                         </button>
                     </div>
 
                     <div className="main-content px-4 py-3">
-                        <h6 className="mt-4" style={{color:"#191b1c"}}>Explore Your Options</h6>
-
-                        <div className='d-flex flex-column'>
-                            <div className='d-flex justify-content-between align-items-center' style={{background: "#E0EDF6", padding: "20px", borderRadius: "10px", marginTop: "20px"}}>
-                                <div className='d-flex align-items-center' style={{columnGap:"10px"}}>
-                                    <img src={tgeclaimdark} alt="Airdrop" width="40px" height="40px"/>
-                                    <div style={{lineHeight: "1.2"}}>
-                                        <h5 style={{color: "#022F64", fontWeight: "initial", marginBottom: 0, fontSize: "1.1rem"}}>Choose Your CEX</h5>
-                                        <p style={{fontWeight: "lighter", marginBottom: 0, marginTop: 0, fontSize: "14px"}}>(Choose Your Next Step)</p>
-                                    </div>
+                        <div className='d-flex flex-column gap-3'>
+                            <div className='d-flex flex-column justify-content-center align-items-center' style={{borderRadius: "25%"}}>
+                                <img src={zerosWalletIcon} alt="Zeros Wallet Img" width="220px" height="220px"/>
+                                <h5 style={{fontSize: "36px", fontWeight: "500"}}>Check Eligibility</h5>
+                            </div>
+                            <div className='d-flex justify-content-between align-items-center px-5 mt-4' style={{position: "relative"}}>
+                                <div className='d-flex flex-column align-items-center' style={{rowGap:"5px", color:"#022F64"}}>
+                                    {this.state.isEligible ? (
+                                        <img src={tickIcon} width={20} height={20}/>
+                                    ):(
+                                        <img src={cancelIcon} width={20} height={20}/>
+                                    )}
+                                    <h6 style={{fontSize: "12px"}}>Mandatory task</h6>
                                 </div>
-                                <div>
-                                    <Link 
-                                        to="/choose-your-cex" 
-                                        className="btn" 
-                                        style={{
-                                            border: "1px solid #022F64", 
-                                            color: "#022F64", 
-                                            padding: "3px 18px", 
-                                            borderRadius: "5px",
-                                            transition: "all 0.3s ease"
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            e.target.style.backgroundColor = "#022F64";
-                                            e.target.style.color = "#fff";
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.target.style.backgroundColor = "transparent";
-                                            e.target.style.color = "#022F64";
-                                        }}
-                                    >
-                                        View
-                                    </Link>
+                                {this.state.isEligible ? (
+                                    <div style={{height: "2px", backgroundColor: "#20C17B", position: "absolute", top: "10px", left: "110px", right: "110px", zIndex: 0}}></div>
+                                ):(
+                                    <div style={{height: "2px", backgroundColor: "#C34254", position: "absolute", top: "10px", left: "110px", right: "110px", zIndex: 0}}></div>
+                                )}
+                                <div className='d-flex flex-column align-items-center' style={{rowGap:"5px", color:"#022F64"}}>
+                                    {this.state.isEligible ? (
+                                        <img src={tickIcon} width={20} height={20}/>
+                                    ):(
+                                        <img src={cancelIcon} width={20} height={20}/>
+                                    )}
+                                    <h6 style={{fontSize: "12px"}}>You are Eligible</h6>
                                 </div>
                             </div>
-
-                            <div className='d-flex justify-content-between align-items-center' style={{background: "#E0EDF6", padding: "20px", borderRadius: "10px", marginTop: "20px"}}>
-                                <div className='d-flex align-items-center' style={{columnGap:"10px"}}>
-                                    <img src={zerosWalletIcon} alt="Airdrop" width="40px" height="40px"/>
-                                    <div style={{lineHeight: "1.2"}}>
-                                        <h5 style={{color: "#022F64", fontWeight: "initial", marginBottom: 0, fontSize: "1.1rem"}}>Check Your Allocation</h5>
-                                        <p style={{fontWeight: "lighter", marginBottom: 0, marginTop: 0, fontSize: "14px"}}>(Coming Soon)</p>
+                            <div style={{height: "1px", backgroundColor: "#022F64", marginTop: "10px"}}></div>
+                            <div className='d-flex flex-column gap-2'>
+                                <div className='d-flex flex-column align-items-center justify-content-center gap-3'>
+                                    <div className='d-flex justify-content-center align-items-center gap-1'>
+                                        {this.state.isEligible ? (
+                                            <>
+                                                <h6 style={{marginBottom: 0}}>You Are Eligible</h6>
+                                                <img src={tickIcon} width={20} height={20}/> 
+                                            </>
+                                        ):(
+                                            <>
+                                                <h6 style={{marginBottom: 0}}>You Are Not Eligible</h6>
+                                                <img src={cancelIcon} width={20} height={20}/>
+                                            </>
+                                        )}
                                     </div>
+                                    <h5 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0}}>Allocation Available Soon</h5>
+                                    <h5 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0}}>{this.state.allocation}</h5>
                                 </div>
-                                <div>
-                                    <Link 
-                                        to="#" 
-                                        className="btn disabled" 
-                                        style={{
-                                            border: "1px solid #022F64", 
-                                            color: "#022F64", 
-                                            padding: "3px 18px", 
-                                            borderRadius: "5px",
-                                            transition: "all 0.3s ease",
-                                            opacity: 0.6
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            if (!e.target.classList.contains('disabled')) {
-                                                e.target.style.backgroundColor = "#022F64";
-                                                e.target.style.color = "#fff";
-                                            }
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            if (!e.target.classList.contains('disabled')) {
-                                                e.target.style.backgroundColor = "transparent";
-                                                e.target.style.color = "#022F64";
-                                            }
-                                        }}
-                                    >
-                                        Soon
-                                    </Link>
-                                </div>
+                                <p style={{textAlign: "center", fontSize: "14px", padding: "5px", color:"#C34254", marginTop: "10px"}}>Note: To Be Eligible For The Airdrop, You Must Complete All Mandatory Tasks Listed Above. Make Sure All Tasks Show A✅Before Proceeding.</p>
                             </div>
                         </div>
-                        <div className='p-2 mt-4'>
-                            <p className='fs-5 fw-semibold'>Description</p>
-                            <p>Take The Next Steps After The TGE (Token Generation Event) For Zeros Token With The Following Options:</p>
-                            <ol style={{display:"flex", flexDirection:"column", gap:"10px"}}>
-                                <li><b>Select Your CEX:</b><br/>Choose From The Available Centralized Exchanges (CEX). More Exchanges Will Be Integrated Soon To Give You Even Greater Flexibility.</li>
-                                <li><b>Check Your Allocation:</b><br/>View Your Zeros Token Distribution. This Feature Is Currently Under Development And Will Be Available Soon.</li>
-                                <li><b>More Features Coming:</b>Post-TGE Upgrades Are On The Way — Including Expanded Exchange Support, Enhanced Wallet Integration, And Detailed Allocation Tracking Via Zeros Wallet.</li>
-                            </ol>
+
+                        <div className='d-flex flex-column gap-3 mt-4'>
+                            <div className='d-flex justify-content-between align-items-center'>
+                                <h5 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0}}>Mandatory Task</h5>
+                                <span className='d-flex gap-2 px-2 py-1' style={{cursor: "pointer"}}>
+                                    <h6 style={{color:"#1877D1", marginBottom: 0, fontWeight: 600}}>refresh</h6>
+                                    <img src={refreshIcon} width={20} height={20}/>
+                                </span>
+                            </div>
+                            
+                            <div className='d-flex flex-column gap-3' style={{borderRadius: "5px", border: "1px solid #1877D1", backgroundColor: "#E0EDF6", padding: "20px"}}>
+                                {this.state.tasks.map((task) => (
+                                    <>
+                                        <div className='d-flex justify-content-between align-items-center' key={task.id}>
+                                            <div className='d-flex justify-content-center align-items-center gap-2'>
+                                                <img src={task.icon} width={55} height={55} style={{borderRadius: "50%"}}/>
+                                                <div className='d-flex flex-column justify-content-between gap-1'>
+                                                    <h6 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0, fontSize: "20px"}}>{task.name}</h6>
+                                                    <p style={{fontSize: "12px", color:"#022F64", marginBottom: 0}}>Allocation Available Soon</p>
+                                                </div>
+                                            </div>
+                                            {task.status ? (
+                                                <div className='d-flex justify-content-center align-items-center gap-2'>
+                                                    <h6 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0}}>Completed</h6>
+                                                    <img src={tickIcon} width={20} height={20}/>
+                                                </div>
+                                            ):(
+                                                <div className='d-flex justify-content-center align-items-center gap-2'>
+                                                    {task.id === 1 ? (
+                                                        <h6 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0, fontSize: "15px", cursor: "pointer"}} onClick={() => this.props.history.push(task.redirect)}>Claim</h6>
+                                                    ) : (
+                                                        <h6 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0, fontSize: "15px", cursor: "pointer"}} onClick={() => this.props.history.push(task.redirect)}>Click to Claim</h6>
+                                                    )}
+                                                    <img src={cancelIcon} width={20} height={20}/>
+                                                </div>
+                                            )}
+                                        </div>
+                                        {task.id !== this.state.tasks.length && (
+                                            <div style={{height: "1px", backgroundColor: "#1877D1", width: "100%"}}></div>
+                                        )}
+                                    </>
+                                ))}
+                            </div>
                         </div>
                     </div>
                     <br/><br/><br/><br/><br/>
                 </div>
-                <Footer/>
             </>
         )
     }
