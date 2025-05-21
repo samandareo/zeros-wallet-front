@@ -93,27 +93,22 @@ class TgeAndClaim extends Component {
                                 </div>
                                 <div>
                                     <Link 
-                                        to="#" 
+                                        to="/allocation" 
                                         className="btn disabled" 
                                         style={{
                                             border: "1px solid #022F64", 
                                             color: "#022F64", 
                                             padding: "3px 18px", 
                                             borderRadius: "5px",
-                                            transition: "all 0.3s ease",
-                                            opacity: 0.6
+                                            transition: "all 0.3s ease"
                                         }}
                                         onMouseEnter={(e) => {
-                                            if (!e.target.classList.contains('disabled')) {
-                                                e.target.style.backgroundColor = "#022F64";
-                                                e.target.style.color = "#fff";
-                                            }
+                                            e.target.style.backgroundColor = "#022F64";
+                                            e.target.style.color = "#fff";
                                         }}
                                         onMouseLeave={(e) => {
-                                            if (!e.target.classList.contains('disabled')) {
-                                                e.target.style.backgroundColor = "transparent";
-                                                e.target.style.color = "#022F64";
-                                            }
+                                            e.target.style.backgroundColor = "transparent";
+                                            e.target.style.color = "#022F64";
                                         }}
                                     >
                                         Soon

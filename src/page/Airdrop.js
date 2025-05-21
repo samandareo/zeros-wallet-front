@@ -486,7 +486,7 @@ class Airdrop extends Component {
                                         </div>
                                     </div>
                                     <Link to="/wallet">
-                                        <button style={{marginTop:"-50px"}} className="btn btn-primary">Wallet</button>
+                                        <button className="btn btn-primary">Wallet</button>
                                     </Link>
                                 </div>
                             </div>
@@ -502,9 +502,7 @@ class Airdrop extends Component {
                                             <p>Don't miss out—stake now and reap the benefits!</p>
                                         </div>
                                     </div>
-                                    <Link to="/stake">
-                                        <button style={{marginTop:"-50px"}} className="btn btn-primary">Stake</button>
-                                    </Link>
+                                    <button className="btn btn-primary" onClick={()=> toast.info("Stake Airdrop has ended. This feature is no longer accessible.", {autoClose: 2000})}>Stake</button>
                                 </div>
                             </div>
 
@@ -516,11 +514,11 @@ class Airdrop extends Component {
                                         </div>
                                         <div style={{marginLeft:"-10px"}}>
                                             <h6 className="mb-1">Swap eth to ZPoint.</h6>
-                                            <p>Swap eth to ZPoint</p>
+                                            <p style={{marginBottom: 0}}>Swap eth to ZPoint</p>
                                         </div>
                                     </div>
                                     <Link to="/swap">
-                                        <button style={{marginTop:"-50px"}} className="btn btn-primary">Swap</button>
+                                        <button className="btn btn-primary">Swap</button>
                                     </Link>
                                 </div>
                             </div>
