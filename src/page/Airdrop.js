@@ -447,15 +447,12 @@ class Airdrop extends Component {
                             {/* added new card about 10.000 nft */}
                             <div className="action-card mb-3 p-3">
                                 <div className="d-flex justify-content-between align-items-center">
-                                    <div className="d-flex align-items-center">
+                                    <div className="d-flex align-items-center gap-2">
                                         <div className="icon-box me-3" style={{marginLeft:"-5px"}}>
                                             <img src="/10004.jpg" alt="" style={{width:"40px", height:"40px", objectFit:"cover", borderRadius: "50%"}}/>
                                         </div>
                                         <div style={{marginLeft:"-10px"}}>
-                                            <h6 className="mb-1">Zeros NFT Claim is Live!</h6>
-                                            <p className='me-1 mb-0'>
-                                                Only the first 10,000 users will be able to receive this NFT. NFT holders will receive bonus rewards from 20 Million ZEROS Tokens - don't miss this limited-time offer!
-                                            </p>
+                                            <h6 style={{fontSize: "18px"}}>Zeros NFT Claim is Live!</h6>
                                         </div>
                                     </div>
                                     <div className='flex flex-column'>
@@ -466,10 +463,10 @@ class Airdrop extends Component {
                                             </button>
                                         </Link>
 
-                                        <div className='text-end mt-2  fw-semibold' style={{fontSize:"12px"}}>
+                                        {/* <div className='text-end mt-2  fw-semibold' style={{fontSize:"12px"}}>
                                             <p className='m-0'>NFT left</p>
                                             <p className='m-0'>{this.state.current_supply}</p>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </div>                 

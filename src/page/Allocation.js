@@ -30,7 +30,7 @@ class Allocation extends Component {
             tasks: [
                 {id:1, name: "500 Points", icon: zpointsIcon, redirect: "/airdrop", status: false, desc: null},
                 {id:2, name: "5 Zeros Token", icon: ztokenIcon, redirect: "/quiz", status: false, desc: null},
-                {id:3, name: "200 XZeros", icon: xzerosIcon, redirect: "/badge", status: false, desc: null},
+                {id:3, name: "100 XZeros", icon: xzerosIcon, redirect: "/badge", status: false, desc: null},
                 {id:4, name: "Badge Claim", icon: badgeIcon, redirect: "/badge", status: false, desc: "Badge allocation 299"},
                 {id:5, name: "NFT Claim", icon: nftIcon, redirect: "/claim", status: false, desc: "NFT allocation 299"},
             ]
@@ -58,7 +58,7 @@ class Allocation extends Component {
                     const taskUpdates = [
                         { id: 1, status: response.data.data.points >= 500 },
                         { id: 2, status: response.data.data.zeros_token >= 5 },
-                        { id: 3, status: response.data.data.xzeros >= 200 },
+                        { id: 3, status: response.data.data.xzeros >= 100 },
                         { id: 4, status: response.data.data.badge },
                         { id: 5, status: response.data.data.nft }
                     ];
@@ -190,12 +190,11 @@ class Allocation extends Component {
                                                 </>
                                             ):(
                                                 <>
-                                                    <h6 style={{marginBottom: 0}}>You Are Not Eligible</h6>
-                                                    <img src={cancelIcon} width={20} height={20}/>
+                                                    <h6 style={{marginBottom: 0, color: "#1877D1", fontSize: "18px"}}>To be eligible complete the task below before June 4th.</h6>
                                                 </>
                                             )}
                                         </div>
-                                        <h5 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0}}>Allocation Available Soon</h5>
+                                        <h5 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0}}>Allocation Available</h5>
                                         <h5 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0}}>{this.state.allocation}</h5>
                                     </div>
                                     <p style={{textAlign: "center", fontSize: "14px", padding: "5px", color:"#C34254", marginTop: "10px"}}>Note: To Be Eligible For The Airdrop, You Must Complete All Mandatory Tasks Listed Above. Make Sure All Tasks Show A✅Before Proceeding.</p>

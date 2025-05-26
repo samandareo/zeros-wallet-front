@@ -88,13 +88,13 @@ class TgeAndClaim extends Component {
                                     <img src={zerosWalletIcon} alt="Airdrop" width="40px" height="40px"/>
                                     <div style={{lineHeight: "1.2"}}>
                                         <h5 style={{color: "#022F64", fontWeight: "initial", marginBottom: 0, fontSize: "1.1rem"}}>Check Your Allocation</h5>
-                                        <p style={{fontWeight: "lighter", marginBottom: 0, marginTop: 0, fontSize: "14px"}}>(Coming Soon)</p>
+                                        <p style={{fontWeight: "lighter", marginBottom: 0, marginTop: 0, fontSize: "14px"}}>(Check Eligibility)</p>
                                     </div>
                                 </div>
                                 <div>
                                     <Link 
                                         to="/allocation" 
-                                        className="btn disabled" 
+                                        className="btn" 
                                         style={{
                                             border: "1px solid #022F64", 
                                             color: "#022F64", 
@@ -111,7 +111,7 @@ class TgeAndClaim extends Component {
                                             e.target.style.color = "#022F64";
                                         }}
                                     >
-                                        Soon
+                                        View
                                     </Link>
                                 </div>
                             </div>
