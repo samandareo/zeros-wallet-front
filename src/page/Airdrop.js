@@ -25,6 +25,7 @@ class Airdrop extends Component {
             token:"",task:"",data:[],blog:[],signup:"0",
             tge:"2025-05-23 06:00:00.906655",
             d:"0",h:"0",m:"0",s:"0",badge:"", current_supply:0,
+            news: "Zeros wallet Allocation Live now🎉 To Be Eligible For The Airdrop, You Must Complete All Mandatory Tasks, Before June 4"
         }
         this.interval=null
     }
@@ -331,7 +332,7 @@ class Airdrop extends Component {
                                <b style={{width:"75px"}}>News :</b>
                                 <marquee
                                          direction="left" loop="">
-                                    <span style={{color:"black",fontWeight:500}}>TGE Launched soon after {this.state.d} days</span>
+                                    <span style={{color:"black",fontWeight:500}}>{this.state.news}</span>
                                 </marquee>
                             </p>
                             <div className='d-flex justify-content-between'>
