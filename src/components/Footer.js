@@ -13,6 +13,9 @@ import airdropwhite from "../images/airdrop-active-icon.png"
 import tgeclaimday from "../images/tgeclaim-white.png"
 import tgeclaimdark from "../images/tgeclaim-blue.png"
 
+import swapDark from "../images/token-swap.png"
+import swapWhite from "../images/tokenswap-white.png"
+
 class Footer extends Component {
     constructor() {
         super();
@@ -35,9 +38,9 @@ class Footer extends Component {
                     <img src={val.path=="/"?iconwhite:home} alt="" width="20px" height="20px"/>
                         Home
                 </Link>
-                <Link to="/quiz" className={val.path=="/quiz"?"nav-item active":"nav-item "}>
-                    <img src={val.path=="/quiz"?dappswhite:dapps} alt="" width="20px" height="20px"/>
-                         Quiz
+                <Link to="/tokenswap" className={val.path=="/tokenswap"?"nav-item active":"nav-item "}>
+                    <img src={val.path=="/tokenswap"?swapWhite:swapDark} alt="" width="20px" height="20px"/>
+                         Swap
                 </Link>
                 <Link to="/earn" className={val.path=="/earn"?"nav-item active":"nav-item "}>
                     <img src={val.path=="/earn"?earnwhite:earn} alt="" width="20px" height="20px"/>
