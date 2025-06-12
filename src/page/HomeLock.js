@@ -40,7 +40,7 @@ class HomeLock extends Component {
 
                     <div className="privacy-notice text-center mb-4">
                         <small>
-                            By Continuing, You Agree To Bitget Wallet's Privacy<br/>
+                            By Continuing, You Agree To Zeros Wallet's Privacy<br/>
                             Policy And <Link to="/terms">Terms Of Service</Link>
                         </small>
                     </div>

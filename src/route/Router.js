@@ -43,6 +43,7 @@ import Badge from "../page/Badge";
 import ClaimZeros from "../page/ClaimNftPage";
 import MyNft from "../page/MyNftpage";
 import Allocation from "../page/Allocation";
+import TokenTransfer from "../page/TransferToken";
 
 class Router extends Component {
 
@@ -58,6 +59,7 @@ class Router extends Component {
                   <Route exact path="/tge-and-claim" component={TgeAndClaim}/>
                   <Route exact path="/choose-your-cex" component={ChooseCex}/>
                   <Route exact path="/allocation" component={Allocation}/>
+                  <Route exact path="/transfer" component={TokenTransfer}/>
                   <Route exact path="/notification" component={Notification}/>
                   <Route exact path="/settings" component={Settings}/>
                   <Route exact path="/sendlist" component={SendList}/>

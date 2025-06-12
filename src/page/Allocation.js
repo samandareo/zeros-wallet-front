@@ -20,17 +20,18 @@ import badgeIcon from "../images/badge.png"
 import refreshIcon from "../images/refresh.png"
 import AllocationSkeleton from '../components/AllocationSkeleton';
 import '../style/AllocationSkeleton.css';
+import { toast } from 'react-toastify';
 
 class Allocation extends Component {
     constructor() {
         super();
         this.state={
             token:"",isEligible: false, allocation: 0, loading:true,
-            taskSectionLoading: false,  // Add this line
+            taskSectionLoading: false, isTransferred: false, // Add this line
             tasks: [
                 {id:1, name: "500 Points", icon: zpointsIcon, redirect: "/airdrop", status: false, desc: null},
                 {id:2, name: "5 Zeros Token", icon: ztokenIcon, redirect: "/quiz", status: false, desc: null},
-                {id:3, name: "100 XZeros", icon: xzerosIcon, redirect: "/badge", status: false, desc: null},
+                // {id:3, name: "100 XZeros", icon: xzerosIcon, redirect: "/badge", status: false, desc: null},
                 {id:4, name: "Badge Claim", icon: badgeIcon, redirect: "/badge", status: false, desc: "Badge allocation 299"},
                 {id:5, name: "NFT Claim", icon: nftIcon, redirect: "/claim", status: false, desc: "NFT allocation 299"},
             ]
@@ -50,15 +51,20 @@ class Allocation extends Component {
             token: token
         }
 
+        console.log("Starting API calls...");
+        console.log("Token:", token);
+        console.log("API URL:", ApiUrl.baseurl + "check-transfer");
+
         Axios.get(ApiUrl.baseurl+"allocation", {params})
             .then((response) => {
+                console.log("Allocation API response received");
                 if(response.data.status === "success"){
                     this.setState({allocation: response.data.data.total_token, loading: false})
 
                     const taskUpdates = [
                         { id: 1, status: response.data.data.points >= 500 },
                         { id: 2, status: response.data.data.zeros_token >= 5 },
-                        { id: 3, status: response.data.data.xzeros >= 100 },
+                        // { id: 3, status: response.data.data.xzeros >= 100 },
                         { id: 4, status: response.data.data.badge },
                         { id: 5, status: response.data.data.nft }
                     ];
@@ -73,16 +79,45 @@ class Allocation extends Component {
 
                     const isEligible = taskUpdates.every(task => task.status);
                     this.setState({ isEligible:isEligible});
-
                 }
             })
             .catch((error) => {
-                console.error('API Error:', error);
+                console.error('Allocation API Error:', error);
                 this.setState({ 
                     loading: false,
                     error: error.response?.data?.message || 'Failed to fetch allocation data'
                 });
             });
+
+    console.log("Making check-transfer API call...");
+    Axios.get(ApiUrl.baseurl+"check-transfer", {params})
+        .then((response) => {
+            console.log("Check-transfer API SUCCESS!");
+            console.log("Full check-transfer response:", response);
+            console.log("Response data:", response.data);
+            console.log("Response status:", response.status);
+            
+            // Check for different possible response structures
+            if(response.data.transferred !== undefined){
+                console.log("Found transferred field:", response.data.transferred);
+                this.setState({isTransferred: response.data.transferred});
+            } else if(response.data.status === "success" && response.data.transferred !== undefined){
+                console.log("Found transferred in success response:", response.data.transferred);
+                this.setState({isTransferred: response.data.transferred});
+            } else {
+                console.log("No transferred field found, setting to false");
+                this.setState({isTransferred: false});
+            }
+        })
+        .catch((error) => {
+            console.error('Check-transfer API FAILED!');
+            console.error('Check-transfer API Error:', error);
+            console.error('Error response:', error.response);
+            this.setState({ 
+                isTransferred: false,
+                error: error.response?.data?.message || 'Failed to check transfer'
+            });
+        });
     }
 
     refreshAllocation = () => {
@@ -102,7 +137,7 @@ class Allocation extends Component {
                     const taskUpdates = [
                         { id: 1, status: response.data.data.points >= 500 },
                         { id: 2, status: response.data.data.zeros_token >= 5 },
-                        { id: 3, status: response.data.data.xzeros >= 200 },
+                        // { id: 3, status: response.data.data.xzeros >= 200 },
                         { id: 4, status: response.data.data.badge },
                         { id: 5, status: response.data.data.nft }
                     ];
@@ -148,15 +183,16 @@ class Allocation extends Component {
 
                     {this.state.loading ? (
                         <AllocationSkeleton />
-                    ) : (
+                    ) : !this.state.isTransferred ? (
                         <div className="main-content px-4 py-3">
                             <div className='d-flex flex-column gap-3'>
                                 <div className='d-flex flex-column justify-content-center align-items-center' style={{borderRadius: "25%"}}>
                                     <img src={zerosWalletIcon} alt="Zeros Wallet Img" width="220px" height="220px"/>
                                     <h5 style={{fontSize: "36px", fontWeight: "500"}}>Check Eligibility</h5>
-                                    <p style={{fontSize: "14px", color:"#022F64"}}>Eligible requirements must be met before June 4th.</p>
+                                    <p style={{fontSize: "14px", color:"#022F64", textAlign:"center"}}>Claim Zeros Token If you are not eligible for NFT and Badge, then click on NFT & Badge Click to claim below and claim it. Then you will be eligible to claim Zeros token.</p>
                                 </div>
-                                <div className='d-flex justify-content-between align-items-center px-5 mt-4' style={{position: "relative"}}>
+
+                                {/* <div className='d-flex justify-content-between align-items-center px-5 mt-4' style={{position: "relative"}}>
                                     <div className='d-flex flex-column align-items-center' style={{rowGap:"5px", color:"#022F64"}}>
                                         {this.state.isEligible ? (
                                             <img src={tickIcon} width={20} height={20}/>
@@ -178,7 +214,8 @@ class Allocation extends Component {
                                         )}
                                         <h6 style={{fontSize: "12px"}}>You are Eligible</h6>
                                     </div>
-                                </div>
+                                </div> */}
+
                                 <div style={{height: "1px", backgroundColor: "#022F64", marginTop: "10px"}}></div>
                                 <div className='d-flex flex-column gap-2'>
                                     <div className='d-flex flex-column align-items-center justify-content-center gap-3'>
@@ -190,17 +227,46 @@ class Allocation extends Component {
                                                 </>
                                             ):(
                                                 <>
-                                                    <h6 style={{marginBottom: 0, color: "#1877D1", fontSize: "18px"}}>To be eligible complete the task below before June 4th.</h6>
+                                                    {/* <h6 style={{marginBottom: 0, color: "#1877D1", fontSize: "18px"}}>To be eligible complete the task below before June 4th.</h6> */}
                                                 </>
                                             )}
                                         </div>
-                                        <h5 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0}}>Allocation Available</h5>
-                                        <h5 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0}}>{this.state.allocation}</h5>
+                                        <div style={{borderRadius: "5px", padding: "10px 25px", backgroundColor: "#E0EDF6", textAlign: "center"}}>
+                                            <h5 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0}}>Allocation Available</h5>
+                                            <h5 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0}}>{this.state.allocation}</h5>
+                                        </div>
                                     </div>
-                                    <p style={{textAlign: "center", fontSize: "14px", padding: "5px", color:"#C34254", marginTop: "10px"}}>Note: To Be Eligible For The Airdrop, You Must Complete All Mandatory Tasks Listed Above. Make Sure All Tasks Show A✅Before Proceeding.</p>
+
+                                    {this.state.isEligible ? (
+                                        <Link to="/transfer" className='d-flex justify-content-center align-items-center' style={{
+                                            textDecoration: "none", 
+                                            backgroundColor: "#1877D1", 
+                                            color: "#fff", 
+                                            padding: "10px", 
+                                            borderRadius: "5px", 
+                                            cursor: "pointer", 
+                                            marginTop: "25px",
+                                        }}>
+                                            Convert
+                                        </Link>
+                                    ):(
+                                        <Link className='d-flex justify-content-center align-items-center' style={{
+                                            textDecoration: "none", 
+                                            backgroundColor: "#ccc", 
+                                            color: "#999", 
+                                            padding: "10px", 
+                                            borderRadius: "5px", 
+                                            cursor: "not-allowed", 
+                                            marginTop: "25px",
+                                            opacity: 0.6
+                                        }}>
+                                            Convert
+                                        </Link>
+                                    )}
                                 </div>
                             </div>
-
+                            {this.state.tasks[0].status && this.state.tasks[1].status && 
+                            (
                             <div className='d-flex flex-column gap-3 mt-4'>
                                 <div className='d-flex justify-content-between align-items-center'>
                                     <h5 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0}}>Mandatory Task</h5>
@@ -234,6 +300,7 @@ class Allocation extends Component {
                                 >
                                     {this.state.tasks.map((task) => (
                                         <>
+                                        {task.id === 4 | task.id === 5 ? (
                                             <div className='d-flex justify-content-between align-items-center' key={task.id}>
                                                 <div className='d-flex justify-content-center align-items-center gap-2'>
                                                     <img src={task.icon} width={55} height={55} style={{borderRadius: "50%"}}/>
@@ -260,14 +327,60 @@ class Allocation extends Component {
                                                     </div>
                                                 )}
                                             </div>
-                                            {task.id !== this.state.tasks.length && (
+                                        ) : (
+                                            <></>
+                                        )}
+                                            {(task.id === 4) && (
                                                 <div style={{height: "1px", backgroundColor: "#1877D1", width: "100%"}}></div>
                                             )}
                                         </>
                                     ))}
                                 </div>
                             </div>
+                            )}
                         </div>
+                    ) : (
+                    <div className='main-content px-4 py-3' style={{marginTop: "50px"}}>
+                        <div className='d-flex flex-column justify-content-center align-items-center mb-3'>
+                            <img src={zerosWalletIcon} alt="Zeros Wallet Img" width="220px" height="220px"/>
+                            <h5 style={{color: "#1877D1", fontWeight: 600, marginBottom: "15px", textAlign: "center"}}>
+                                Transfer Already Completed
+                            </h5>
+                            <p style={{color: "#022F64", textAlign: "center", fontSize: "16px"}}>
+                                You have already claimed Zeros allocation, check your airdrop wallet.
+                            </p>
+                        </div>
+{/* 
+                        <div style={{
+                            borderRadius: "5px", 
+                            padding: "15px", 
+                            backgroundColor: "#E0EDF6", 
+                            textAlign: "center",
+                            border: "1px solid #1877D1"
+                        }}>
+                            <h6 style={{fontWeight: 600, color: "#1877D1", marginBottom: "10px"}}>
+                                Your Allocation
+                            </h6>
+                            <h5 style={{fontWeight: 600, color: "#1877D1", marginBottom: 0}}>
+                                {this.state.allocation}
+                            </h5>
+                        </div> */}
+
+                        <div style={{
+                            display: "flex", 
+                            justifyContent: "center", 
+                            alignItems: "center", 
+                            backgroundColor: "#1877D1", 
+                            color: "#fff", 
+                            padding: "12px", 
+                            borderRadius: "5px",
+                            marginTop: "20px",
+                            cursor: "pointer"
+                        }} onClick={() => this.props.history.push("/wallet")}>
+                            <span style={{marginRight: "8px"}}>↗️</span>
+                            View Wallet
+                        </div>
+                    </div>
                     )}
                     <br/><br/><br/><br/><br/>
                 </div>

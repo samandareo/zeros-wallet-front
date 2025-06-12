@@ -137,9 +137,9 @@ class WalletView extends Component {
                         </div>
                     </div>
 
-                    <div className="action-grid">
+                    <div className="action-grid d-flex justify-content-around">
                         {
-                            this.state.deposit=="1"?
+                            this.state.withdrew=="1"?
                                 <Link to={"/wallet/withdrew/"+this.state.coin_symbol}
                                       style={{padding:"10px",width:"130px",
                                           background:"#2168AA",color:"#ffffff",

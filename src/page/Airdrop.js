@@ -335,14 +335,15 @@ class Airdrop extends Component {
                                     <span style={{color:"black",fontWeight:500}}>{this.state.news}</span>
                                 </marquee>
                             </p>
-                            <div className='d-flex justify-content-between'>
-                                <h4 className=" mb-3">Daily Task</h4>
+                            <div className='d-flex justify-content-end align-items-center mb-3'>
+                                {/* <h4 className=" mb-3">Daily Task</h4> */}
                                 {/* added new code [link for nft page] */}
                                 <span>
                                     <Link to="/mynft" className="text-decoration-underline font-bold d-inline-block" >My NFT</Link>
                                 </span>
                             </div>
-                            <div className="card task-card mb-3">
+                            
+                            {/* <div className="card task-card mb-3">
                                 <div className="card-body">
                                     <div className="d-flex justify-content-between align-items-center mb-3">
                                         <div className="d-flex align-items-center">
@@ -352,6 +353,10 @@ class Airdrop extends Component {
                                                 disabled={val.task=="Yes" || val.loading==true}
                                                 className="btn btn-primary btn-sm">
                                             {val.loading==true?"Loading...":val.task=="Yes"?"Claimed":"Go"}
+                                        </button>
+                                        <button className='btn btn-primary btn-sm'
+                                                onClick={() => toast.info(" Zeros airdrop ended!", {autoClose: 2000})}>
+                                                Go
                                         </button>
                                     </div>
                                     <div className="progress-circles">
@@ -416,8 +421,28 @@ class Airdrop extends Component {
                                         </>:""}
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
+                            
+                            {/* WALLET */}
+                            <div className="action-card mb-3">
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <div className="d-flex align-items-center">
+                                        <div className="icon-box me-3" style={{marginLeft:"-5px"}}>
+                                            <img src={wallet} alt="" width="40px"/>
+                                        </div>
+                                        <div style={{marginLeft:"-10px"}}>
+                                            <h6 className="mb-1">Access Your Airdrop Wallet</h6>
+                                            <p>Easily manage your rewards and track your earnings with your Airdrop
+                                                Wallet.</p>
+                                        </div>
+                                    </div>
+                                    <Link to="/wallet">
+                                        <button className="btn btn-primary">Wallet</button>
+                                    </Link>
+                                </div>
+                            </div>
+                            
                             <div className="action-card mb-3">
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex align-items-center">
@@ -470,26 +495,11 @@ class Airdrop extends Component {
                                         </div> */}
                                     </div>
                                 </div>
-                            </div>                 
-                            <div className="action-card mb-3">
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <div className="d-flex align-items-center">
-                                        <div className="icon-box me-3" style={{marginLeft:"-5px"}}>
-                                            <img src={wallet} alt="" width="40px"/>
-                                        </div>
-                                        <div style={{marginLeft:"-10px"}}>
-                                            <h6 className="mb-1">Access Your Airdrop Wallet</h6>
-                                            <p>Easily manage your rewards and track your earnings with your Airdrop
-                                                Wallet.</p>
-                                        </div>
-                                    </div>
-                                    <Link to="/wallet">
-                                        <button className="btn btn-primary">Wallet</button>
-                                    </Link>
-                                </div>
                             </div>
+                    
 
-                            <div className="action-card mb-3">
+                            {/* STAKE */}
+                            {/* <div className="action-card mb-3">
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex align-items-center">
                                         <div className="icon-box me-3">
@@ -502,9 +512,10 @@ class Airdrop extends Component {
                                     </div>
                                     <button className="btn btn-primary" onClick={()=> toast.info("Stake Airdrop has ended. This feature is no longer accessible.", {autoClose: 2000})}>Stake</button>
                                 </div>
-                            </div>
+                            </div> */}
 
-                            <div className="action-card mb-3">
+                            {/* SWAP */}
+                            {/* <div className="action-card mb-3">
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex align-items-center">
                                         <div className="icon-box me-3">
@@ -519,9 +530,10 @@ class Airdrop extends Component {
                                         <button className="btn btn-primary">Swap</button>
                                     </Link>
                                 </div>
-                            </div>
+                            </div> */}
 
-                            <div className="action-card mb-3">
+                            {/* REFER */}
+                            {/* <div className="action-card mb-3">
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex align-items-center">
                                         <div className="icon-box me-3">
@@ -538,7 +550,8 @@ class Airdrop extends Component {
                                         <button style={{marginTop:"-50px"}} className="btn btn-primary">Go</button>
                                     </Link>
                                 </div>
-                            </div>
+                            </div> */}
+
                         </div>
                         <br/><br/><br/>
                     </div>

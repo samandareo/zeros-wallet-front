@@ -29,7 +29,9 @@ class Home extends Component {
         this.state={
             token:"",blog:[],coin:[],infounseen:[],info:[],dwallet:[],name:"",
             hide:"no",backup:false,loading:true,badge:"", splash:null,popup:null,
-            showSplash:false
+            showSplash:false, sequence: 0,
+            popupQueue: [], // Add this to store all popup notifications
+            currentPopupIndex: 0 // Add this to track current popup
         }
         this.interval=null
     }
@@ -75,36 +77,36 @@ class Home extends Component {
         Axios.get(ApiUrl.baseurl + "notifications")
         .then(res => {
           if (res.data.error) {
-            this.setState({ splash: null, popup: null });
+            this.setState({ splash: null, popup: null, popupQueue: [] });
             return;
           }
       
           const data = res.data.notifications;
       
           let splash = null;
-          let popup = null;
+          let popupNotifications = [];
       
           data.forEach(notification => {
             if (notification.type === "splash" && notification.is_active === 1) {
               splash = notification;
             } else if (notification.type === "popup" && notification.is_active === 1) {
-              popup = notification;
+              popupNotifications.push(notification);
             }
           });
+
+          // Sort popup notifications by seq_order
+          popupNotifications.sort((a, b) => (a.seq_order || 0) - (b.seq_order || 0));
       
           const splashSeen = sessionStorage.getItem("splashSeen") === "true";
           if (splash && !splashSeen) {
             this.setState({ splash, showSplash: true });
             sessionStorage.setItem("splashSeen", "true");
           }
-      
-          const popupSeen = sessionStorage.getItem("popupSeen") === "true";
-          if (popup && !popupSeen) {
-            setTimeout(() => {
-              this.setState({ popup });
-              sessionStorage.setItem("popupSeen", "true");
-            }, splash && !splashSeen ? 1000 : 0);
-          }
+
+          // Store popup queue and show the next popup in sequence
+          this.setState({ popupQueue: popupNotifications }, () => {
+            this.showSequentialPopup(splash && !splashSeen);
+          });
         })
         .catch(err => {
           console.error("Error fetching notifications:", err);
@@ -204,8 +206,41 @@ class Home extends Component {
         this.setState({ showSplash: false });
     };
     
+    showSequentialPopup = (delaySplash = false) => {
+        const { popupQueue } = this.state;
+        
+        if (popupQueue.length === 0) {
+          return; // No popups to show
+        }
+
+        // Check if popup was already shown in this session
+        const popupShownThisSession = sessionStorage.getItem("popupShownThisSession");
+        if (popupShownThisSession === "true") {
+          return; // Don't show popup if already shown in this session
+        }
+
+        // Get the current popup sequence from localStorage
+        let currentSequence = parseInt(localStorage.getItem("popupSequence") || "0");
+        
+        // Calculate which popup to show (cycle through available popups)
+        const popupIndex = currentSequence % popupQueue.length;
+        const currentPopup = popupQueue[popupIndex];
+        
+        // Increment sequence for next login
+        localStorage.setItem("popupSequence", (currentSequence + 1).toString());
+        
+        // Mark that popup will be shown in this session
+        sessionStorage.setItem("popupShownThisSession", "true");
+
+        const delay = delaySplash ? 1000 : 0;
+        setTimeout(() => {
+          this.setState({ popup: currentPopup });
+        }, delay);
+    };
+
     handlePopupClose = () => {
         this.setState({ popup: null });
+        // Popup is already marked as shown for this session
     };
 
     setWalletToCoin=()=>{
