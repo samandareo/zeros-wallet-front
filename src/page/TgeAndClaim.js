@@ -11,6 +11,7 @@ import RouteCheck from "../components/routeCheck";
 
 import zerosWalletIcon from "../images/zeros-wallet.png"
 import tgeclaimdark from "../images/tgeclaim-blue.png"
+import preSale from "../images/presale.jpg";
 
 
 class TgeAndClaim extends Component {
@@ -114,6 +115,9 @@ class TgeAndClaim extends Component {
                                         View
                                     </Link>
                                 </div>
+                            </div>
+                            <div>
+                                <img src={preSale} alt="Pre Sale" className='img-fluid' style={{borderRadius: "10px", marginTop: "20px", cursor: "pointer"}} onClick={() => this.props.history.push("/pre-sale")}/>
                             </div>
                         </div>
                         <div className='p-2 mt-4'>

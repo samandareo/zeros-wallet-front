@@ -44,7 +44,8 @@ import ClaimZeros from "../page/ClaimNftPage";
 import MyNft from "../page/MyNftpage";
 import Allocation from "../page/Allocation";
 import TokenTransfer from "../page/TransferToken";
-import SwipeToken from "../page/TokenSwap";
+import SwapToken from "../page/TokenSwap";
+import PreSale from "../page/PreSale";
 
 class Router extends Component {
 
@@ -84,7 +85,8 @@ class Router extends Component {
                   <Route exact path="/stake" component={Stake}/>
                   <Route exact path="/about" component={About}/>
                   <Route exact path="/swap" component={Swap}/>
-                  <Route exact path="/tokenswap" component={SwipeToken}/>
+                  <Route exact path="/pre-sale" component={PreSale}/>
+                  <Route exact path="/tokenswap" component={SwapToken}/>
                   <Route exact path="/refer" component={Refer}/>
                   <Route exact path="/backup" component={BackUp}/>
                   <Route exact path="/history" component={History}/>
