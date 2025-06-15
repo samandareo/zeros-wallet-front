@@ -21,9 +21,9 @@ class TokenSwap extends Component {
         super();
         this.state={
             token:"", loading:true, showPopup: false, balances: {
-                ZRS: 10000, // Example balance for Zeros token
-                SOL: 500,     // Example balance for Solana
-                USDT: 100     // Example balance for USDT
+                ZRS: 0, // Example balance for Zeros token
+                SOL: 0,     // Example balance for Solana
+                USDT: 0     // Example balance for USDT
             }
         }
     }
