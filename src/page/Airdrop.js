@@ -17,6 +17,7 @@ import closebtn from "../images/close-button.png"
 import blogo from "../images/3d-3.png"
 import {TimeAgo} from "./Quiz";
 import RouteCheck from "../components/routeCheck";
+import presaleIcon from "../images/presale-airdrop.png";
 
 class Airdrop extends Component {
     constructor() {
@@ -496,7 +497,35 @@ class Airdrop extends Component {
                                     </div>
                                 </div>
                             </div>
-                    
+
+                            <div className="action-card mb-3 p-3">
+                                <div className="d-flex justify-content-between align-items-center">
+                                        <div className="icon-box me-3">
+                                            <img src={presaleIcon} alt="" style={{width:"40px", height:"40px", objectFit:"cover", borderRadius: "50%"}}/>
+                                        </div>
+                                    <div className="d-flex align-items-center gap-2">
+                                        <div style={{display: "flex", flexDirection: "column", gap: "5px"}}>
+                                            <h6 style={{fontSize: "16px"}}>Join Zeros Token Pre-Sale</h6>
+                                            <p style={{fontSize: "12px", margin:0}}>
+                                                Buy Zeros Tokens early at a special price before the official launch.. Click below to secure your tokens now!
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className='flex flex-column'>
+                                        <Link to="/pre-sale" className="d-inline-block">
+                                            <button style={{width:"50px",paddingLeft:"3px",paddingRight:"3px"}}
+                                                    className="btn btn-primary">
+                                                Buy
+                                            </button>
+                                        </Link>
+
+                                        {/* <div className='text-end mt-2  fw-semibold' style={{fontSize:"12px"}}>
+                                            <p className='m-0'>NFT left</p>
+                                            <p className='m-0'>{this.state.current_supply}</p>
+                                        </div> */}
+                                    </div>
+                                </div>
+                            </div>
 
                             {/* STAKE */}
                             {/* <div className="action-card mb-3">

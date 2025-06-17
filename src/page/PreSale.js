@@ -8,13 +8,14 @@ import RouteCheck from "../components/routeCheck";
 
 import { showPopup } from '@telegram-apps/sdk';
 import PreSaleCard from '../components/PreSaleCard';
+import Countdown from '../components/Countdown';
 
 
 class PreSale extends Component {
     constructor() {
         super();
         this.state={
-            token:"", loading:true, showPopup: false, token_price : 0.02, deadline : 28
+            token:"", loading:true, showPopup: false, token_price : 0.02, deadline : 29
         }
     }
 
@@ -47,7 +48,7 @@ class PreSale extends Component {
                     <div className="main-content px-5 py-3">
                         <div className='d-flex flex-column justify-content-center align-items-center gap-3'>
                             <h6 className="mt-4" style={{color:"#1877D1", textAlign: "center", fontSize: "32px", fontWeight: 600}}>Zeros Token Pre-Sale is Live!</h6>
-                            <span>10 days 00hours  00min</span>
+                            <Countdown/>
                             <span style={{color: "#1877D1"}}>1 Zeros Tokens = {this.state.token_price}$</span>
                         </div>
 
@@ -65,7 +66,7 @@ class PreSale extends Component {
                                         <p style={{fontSize: "16px", marginBottom: 0}}>1. Deposit your BNB into your Airdrop Wallet.</p>
                                         <p style={{fontSize: "16px", marginBottom: 0}}>2. Once the deposit is made, your pre-sale ZRS tokens will be credited directly to your Airdrop Wallet.</p>
                                     </div>
-                                    <p style={{fontSize: "16px", marginBottom: 0}}>This is your exclusive opportunity to secure Zeros Tokens at the lowest price before the official listing on June 21. Don’t miss out!</p>
+                                    <p style={{fontSize: "16px", marginBottom: 0}}>This is your exclusive opportunity to secure Zeros Tokens at the lowest price before the official listing on June 29. Don’t miss out!</p>
                                 </div>
                             </div>
                         </div>

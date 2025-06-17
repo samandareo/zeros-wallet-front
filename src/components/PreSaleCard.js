@@ -53,6 +53,18 @@ export default function PreSaleCard({token_price, token}) {
 
 
     const buyZeros = () => {
+        if (amountBNB === "" || amountZRS === "") {
+            toast.error("Please enter a valid amount of BNB and ZRS");
+            return;
+        }
+        if (isNaN(amountZRS) || isNaN(amountBNB)) {
+            toast.error("Please enter valid numeric values for BNB and ZRS");
+            return;
+        }
+        if (parseFloat(amountBNB) < 1 || isNaN(amountBNB) || parseFloat(amountBNB) <= 0) {
+            toast.error("Please enter a valid amount of BNB (minimum 1$)");
+            return;
+        }
         setBnbAmount(parseFloat(amountBNB) * parseFloat(oneUSD));
         setZrsAmount(parseFloat(amountZRS));
         setShowPopup(true);
@@ -164,7 +176,7 @@ export default function PreSaleCard({token_price, token}) {
                             justifyContent: "center",
                             alignItems: "center",
                             zIndex: 1000
-                        }}>
+                        }} onClick={()=> setShowPopup(false)} >
                             <div style={{
                                 backgroundColor: "#fff",
                                 padding: "30px",
@@ -172,8 +184,12 @@ export default function PreSaleCard({token_price, token}) {
                                 textAlign: "center",
                                 maxWidth: "400px",
                                 width: "90%",
-                                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)"
+                                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
+                                position: "relative"
                             }}>
+                                <span style={{position: "absolute", top:20, right:20, cursor: "pointer"}}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+                                </span>
                                 <div style={{fontSize: "24px", marginBottom: "15px"}}>🧮</div>
                                 <h3 style={{margin: "0 0 10px 0", color: "#333", fontSize: "20px"}}>Confirmation</h3>
                                 <p style={{margin: "0 0 25px 0", color: "#666", fontSize: "16px"}}>
