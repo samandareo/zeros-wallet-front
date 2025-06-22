@@ -5,8 +5,11 @@ import zeros from '../images/zeros-wallet.png';
 import solana from '../images/solana.png';
 import usdt from '../images/usdt-icon.png';
 import CustomDropdown from './CustomDropdown';
+import axios from 'axios';
+import ApiUrl from "../AppUrl/ApiUrl";
+import { toast } from 'react-toastify';
 
-export default function TokenSwapCard({balances}) {
+export default function TokenSwapCard({balances, token}) {
     const conversionRate = 0.06;
     const tokens = [
         { name: "Zeros", symbol: "ZRS", icon: zeros },
@@ -20,6 +23,35 @@ export default function TokenSwapCard({balances}) {
     const [toAmount, setToAmount] = useState("");
     const [lastChangedInput, setLastChangedInput] = useState('from');
     const [showPopup, setShowPopup] = useState(false);
+
+    const [solanaCurrency, setSolanaCurrency] = useState(0.0);
+    // Add lastChangedPrice ref to trigger conversion updates
+    const lastChangedPrice = useRef(0);
+
+
+    useEffect(() => {
+        // Function to fetch SOL price
+        const fetchSolPrice = async () => {
+            try {
+                const response = await axios.get('https://coincodex.com/api/coincodex/get_coin/sol');
+                setSolanaCurrency(response.data.last_price_usd);
+                // Update ref to trigger conversion recalculation
+                lastChangedPrice.current = response.data.last_price_usd;
+                console.log('Updated SOL price:', response.data.last_price_usd);
+            } catch (error) {
+                console.error('Error fetching SOL price:', error);
+            }
+        };
+
+        // Initial fetch
+        fetchSolPrice();
+
+        // Set up polling interval (every 10 seconds)
+        const interval = setInterval(fetchSolPrice, 10000);
+
+        // Cleanup on unmount
+        return () => clearInterval(interval);
+    }, []);
 
     let fromState = {
         token: fromToken,
@@ -53,37 +85,51 @@ export default function TokenSwapCard({balances}) {
         }
     };
 
+    // Add solanaCurrency to dependency array of conversion useEffect
     useEffect(() => {
+        const calculateConversion = (amount, fromToken, toToken) => {
+            if (fromToken === toToken) return amount;
+            
+            const conversionMap = {
+                'ZRS_USDT': amount * conversionRate,
+                'ZRS_SOL': amount * conversionRate / parseFloat(solanaCurrency),
+                'USDT_ZRS': amount / conversionRate,
+                'SOL_ZRS': amount * solanaCurrency / conversionRate,
+                'USDT_SOL': amount / solanaCurrency,
+                'SOL_USDT': amount * solanaCurrency
+            };
+
+            const key = `${fromToken}_${toToken}`;
+            const conversion = conversionMap[key];
+            
+            return isNaN(conversion) ? "" : conversion.toFixed(6).toString();
+        };
+
         if (fromState.token === toState.token) {
             if (lastChangedInput === 'from') {
                 setToAmount(fromState.amount.toString());
             } else {
                 setFromAmount(toState.amount.toString());
             }
-        } else {
-            if (lastChangedInput === 'from') {
-                if (fromState.token === "ZRS" && (toState.token === "USDT" || toState.token === "SOL")) {
-                    const conversion = fromState.amount * conversionRate;
-                    setToAmount(isNaN(conversion) ? "" : conversion.toFixed(2).toString());
-                } else if ((fromState.token === "USDT" || fromState.token === "SOL") && toState.token === "ZRS") {
-                    const conversion = fromState.amount / conversionRate;
-                    setToAmount(isNaN(conversion) ? "" : conversion.toFixed(2).toString());
-                } else {
-                    setToAmount(fromState.amount.toString());
-                }
-            } else {
-                if (toState.token === "ZRS" && (fromState.token === "USDT" || fromState.token === "SOL")) {
-                    const conversion = toState.amount * conversionRate;
-                    setFromAmount(isNaN(conversion) ? "" : conversion.toFixed(2).toString());
-                } else if ((toState.token === "USDT" || toState.token === "SOL") && fromState.token === "ZRS") {
-                    const conversion = toState.amount / conversionRate;
-                    setFromAmount(isNaN(conversion) ? "" : conversion.toFixed(2).toString());
-                } else {
-                    setFromAmount(toState.amount.toString());
-                }
-            }
+            return;
         }
-    }, [fromState.token, fromState.amount, toState.token, toState.amount, lastChangedInput]);
+
+        if (lastChangedInput === 'from' && fromAmount !== "") {
+            const newAmount = calculateConversion(
+                fromState.amount,
+                fromState.token,
+                toState.token
+            );
+            setToAmount(newAmount);
+        } else if (toAmount !== "") {
+            const newAmount = calculateConversion(
+                toState.amount,
+                toState.token,
+                fromState.token
+            );
+            setFromAmount(newAmount);
+        }
+    }, [fromState.token, fromState.amount, toState.token, toState.amount, lastChangedInput, solanaCurrency, conversionRate]); // Added solanaCurrency
 
     const fillWithBalance = () => {
         const balance = balances[fromToken] || 0;
@@ -101,7 +147,30 @@ export default function TokenSwapCard({balances}) {
     }
 
     const handleSwapClick = () => {
-        setShowPopup(true);
+        // setShowPopup(true);
+
+        var formData = new FormData();
+        formData.append("token", token)
+        formData.append("fromToken", fromState.token)
+        formData.append("toToken", toState.token)
+        formData.append("fromAmount", fromState.amount)
+        formData.append("toAmount", toState.amount)
+
+        axios.post(ApiUrl.baseurl + "token-swap", formData)
+            .then(response => {
+                if (response.data.success){
+                    toast.success(response.data.success)
+                }
+                setTimeout(
+                    () => window.location.reload(),
+                    3000
+                )
+            })
+            .catch(error => {
+                if (error.response && error.response.data && error.response.data.error){
+                    toast.error(error.response.data.error)
+                }
+            })
     };
 
     const closePopup = () => {
@@ -127,9 +196,8 @@ export default function TokenSwapCard({balances}) {
                             <input
                                 className={styles.noSpinner}
                                 type="text"
-                                placeholder="Prices will be available very soon."
-                                // value={fromAmount}
-                                readOnly
+                                placeholder="0.00"
+                                value={fromAmount}
                                 onChange={(e) => {
                                     const value = e.target.value;
                                     // Only allow numbers, decimal point, and empty string
@@ -163,9 +231,8 @@ export default function TokenSwapCard({balances}) {
                             <input
                                 className={styles.noSpinner}
                                 type="text"
-                                placeholder="Prices will be available very soon."
-                                // value={toAmount}
-                                readOnly
+                                placeholder="0.00"
+                                value={toAmount}
                                 onChange={(e) => {
                                     const value = e.target.value;
                                     // Only allow numbers, decimal point, and empty string

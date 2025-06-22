@@ -64,9 +64,9 @@ class TransferToken extends Component {
                     this.setState({bnb: response.data.data.bnb});
 
                     const taskUpdates = [
-                        { id: 1, status: response.data.data.points >= 500, amount: response.data.data.points},
-                        { id: 2, status: response.data.data.zeros_token >= 5, amount: response.data.data.zeros_token},
-                        // { id: 3, status: response.data.data.xzeros >= 100, amount: response.data.data.xzeros},
+                        { id: 1, status: true, amount: response.data.data.points},
+                        { id: 2, status: true, amount: response.data.data.zeros_token},
+                        { id: 3, status: true, amount: response.data.data.xzeros},
                         { id: 4, status: response.data.data.badge, amount: null},
                         { id: 5, status: response.data.data.nft, amount: null}
                     ];
@@ -95,7 +95,7 @@ class TransferToken extends Component {
         
         Axios.get(ApiUrl.baseurl+"check-transfer", {params})
             .then((response) => {
-                if(response.data.success){
+                if(response.data){
                     this.setState({isTransferred: response.data.transferred}); // Remove .data
                 } else {
                     this.setState({isTransferred: false});
@@ -245,7 +245,7 @@ class TransferToken extends Component {
                             </div>
                             <div className='d-flex flex-column justify-content-center align items-center'>
                                 <p style={{textAlign:"center", color: "rgb(195, 66, 84)", fontSize: "14px"}}>
-                                    Note: To Successfully Transfer Your ZEROS Token Allocation, Your Airdrop Wallet Must Contain At Least 0.0015 BNB. Without It, The Transaction Will Fail Due To Insuficent Network Fees.
+                                    Note: To Successfully Transfer Your ZEROS Token Allocation, Your Airdrop Wallet Must Contain At Least 0.0015 BNB. Without It, The Transaction Will Fail Due To Insufficent Network Fees.
                                 </p>
                             </div>
 

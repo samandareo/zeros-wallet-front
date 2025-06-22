@@ -29,9 +29,9 @@ class Allocation extends Component {
             token:"",isEligible: false, allocation: 0, loading:true,
             taskSectionLoading: false, isTransferred: false, // Add this line
             tasks: [
-                {id:1, name: "500 Points", icon: zpointsIcon, redirect: "/airdrop", status: false, desc: null},
-                {id:2, name: "5 Zeros Token", icon: ztokenIcon, redirect: "/quiz", status: false, desc: null},
-                // {id:3, name: "100 XZeros", icon: xzerosIcon, redirect: "/badge", status: false, desc: null},
+                {id:1, name: "500 Points", icon: zpointsIcon, redirect: "/airdrop", status: true, desc: null},
+                {id:2, name: "5 Zeros Token", icon: ztokenIcon, redirect: "/quiz", status: true, desc: null},
+                {id:3, name: "100 XZeros", icon: xzerosIcon, redirect: "/badge", status: true, desc: null},
                 {id:4, name: "Badge Claim", icon: badgeIcon, redirect: "/badge", status: false, desc: "Badge allocation 299"},
                 {id:5, name: "NFT Claim", icon: nftIcon, redirect: "/claim", status: false, desc: "NFT allocation 299"},
             ]
@@ -62,9 +62,9 @@ class Allocation extends Component {
                     this.setState({allocation: response.data.data.total_token, loading: false})
 
                     const taskUpdates = [
-                        { id: 1, status: response.data.data.points >= 500 },
-                        { id: 2, status: response.data.data.zeros_token >= 5 },
-                        // { id: 3, status: response.data.data.xzeros >= 100 },
+                        { id: 1, status: true },
+                        { id: 2, status: true },
+                        { id: 3, status: true },
                         { id: 4, status: response.data.data.badge },
                         { id: 5, status: response.data.data.nft }
                     ];
@@ -135,8 +135,8 @@ class Allocation extends Component {
                     });
 
                     const taskUpdates = [
-                        { id: 1, status: response.data.data.points >= 500 },
-                        { id: 2, status: response.data.data.zeros_token >= 5 },
+                        // { id: 1, status: response.data.data.points >= 500 },
+                        // { id: 2, status: response.data.data.zeros_token >= 5 },
                         // { id: 3, status: response.data.data.xzeros >= 200 },
                         { id: 4, status: response.data.data.badge },
                         { id: 5, status: response.data.data.nft }
@@ -265,7 +265,7 @@ class Allocation extends Component {
                                     )}
                                 </div>
                             </div>
-                            {this.state.tasks[0].status && this.state.tasks[1].status && 
+                            {true && 
                             (
                             <div className='d-flex flex-column gap-3 mt-4'>
                                 <div className='d-flex justify-content-between align-items-center'>
