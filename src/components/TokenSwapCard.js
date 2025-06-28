@@ -8,6 +8,7 @@ import CustomDropdown from './CustomDropdown';
 import axios from 'axios';
 import ApiUrl from "../AppUrl/ApiUrl";
 import { toast } from 'react-toastify';
+import "../style/SpinAnimation.module.css"
 
 export default function TokenSwapCard({balances, token}) {
     const conversionRate = 0.06;
@@ -23,6 +24,7 @@ export default function TokenSwapCard({balances, token}) {
     const [toAmount, setToAmount] = useState("");
     const [lastChangedInput, setLastChangedInput] = useState('from');
     const [showPopup, setShowPopup] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Add this near the other useState declarations
 
     const [solanaCurrency, setSolanaCurrency] = useState(0.0);
     // Add lastChangedPrice ref to trigger conversion updates
@@ -146,9 +148,12 @@ export default function TokenSwapCard({balances, token}) {
         setToAmount(tempAmount.toString());
     }
 
-    const handleSwapClick = () => {
-        // setShowPopup(true);
-
+    // Modify the handleSwapClick function
+    const handleSwapClick = async () => {
+        if (isLoading) return; // Prevent double clicks
+        
+        setIsLoading(true);
+        
         var formData = new FormData();
         formData.append("token", token)
         formData.append("fromToken", fromState.token)
@@ -156,21 +161,21 @@ export default function TokenSwapCard({balances, token}) {
         formData.append("fromAmount", fromState.amount)
         formData.append("toAmount", toState.amount)
 
-        axios.post(ApiUrl.baseurl + "token-swap", formData)
-            .then(response => {
-                if (response.data.success){
-                    toast.success(response.data.success)
-                }
-                setTimeout(
-                    () => window.location.reload(),
-                    3000
-                )
-            })
-            .catch(error => {
-                if (error.response && error.response.data && error.response.data.error){
-                    toast.error(error.response.data.error)
-                }
-            })
+        try {
+            const response = await axios.post(ApiUrl.baseurl + "token-swap", formData);
+            if (response.data.success) {
+                toast.success(response.data.success)
+            }
+            setTimeout(
+                () => window.location.reload(),
+                3000
+            )
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.error) {
+                toast.error(error.response.data.error)
+            }
+            setIsLoading(false); // Reset loading state on error
+        }
     };
 
     const closePopup = () => {
@@ -263,20 +268,41 @@ export default function TokenSwapCard({balances, token}) {
             <div style={{display: "flex", flexDirection: "column", justifyContent: "center", marginTop: "40px"}}>
                 <button 
                     onClick={handleSwapClick}
+                    disabled={isLoading}
                     style={{
                         width: "100%", 
                         textAlign: "center", 
                         padding: "15px", 
-                        backgroundColor: "#022F64", 
+                        backgroundColor: isLoading ? "#6B87AD" : "#022F64", 
                         borderRadius: "10px", 
                         color: "#fff",
                         border: "none",
-                        cursor: "pointer",
+                        cursor: isLoading ? "not-allowed" : "pointer",
                         fontSize: "16px",
-                        fontWeight: "500"
+                        fontWeight: "500",
+                        position: "relative",
+                        transition: "background-color 0.3s"
                     }}
                 >
-                    Swap Zeros
+                    {isLoading ? (
+                        <>
+                            <span style={{ opacity: 0 }}>Swap Zeros</span>
+                            <div style={{
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                width: "20px",
+                                height: "20px",
+                                border: "3px solid #ffffff40",
+                                borderTop: "3px solid #fff",
+                                borderRadius: "50%",
+                                animation: "spin 1s linear infinite"
+                            }} />
+                        </>
+                    ) : (
+                        "Swap Zeros"
+                    )}
                 </button>
             </div>
 
