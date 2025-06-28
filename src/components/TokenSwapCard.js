@@ -19,15 +19,15 @@ export default function TokenSwapCard({balances, token}) {
     ];
 
     const [fromToken, setFromToken] = useState("ZRS");
-    const [toToken, setToToken] = useState("SOL"); // Changed default to prevent same token
+    const [toToken, setToToken] = useState("SOL");
     const [fromAmount, setFromAmount] = useState("");
     const [toAmount, setToAmount] = useState("");
     const [lastChangedInput, setLastChangedInput] = useState('from');
     const [showPopup, setShowPopup] = useState(false);
-    const [isLoading, setIsLoading] = useState(false); // Add this near the other useState declarations
+    const [isLoading, setIsLoading] = useState(false);
 
     const [solanaCurrency, setSolanaCurrency] = useState(0.0);
-    // Add lastChangedPrice ref to trigger conversion updates
+    const [bnbCurrency, setBnbCurrency] = useState(0.0);
     const lastChangedPrice = useRef(0);
 
 
@@ -35,30 +35,29 @@ export default function TokenSwapCard({balances, token}) {
         // Function to fetch SOL price
         const fetchSolPrice = async () => {
             try {
-                const response = await axios.get('https://coincodex.com/api/coincodex/get_coin/sol');
-                setSolanaCurrency(response.data.last_price_usd);
+                const sol = await axios.get('https://coincodex.com/api/coincodex/get_coin/sol');
+                const bnb = await axios.get('https://coincodex.com/api/coincodex/get_coin/bnb')
+                setSolanaCurrency(sol.data.last_price_usd);
+                setBnbCurrency(bnb.data.last_price_usd);
                 // Update ref to trigger conversion recalculation
-                lastChangedPrice.current = response.data.last_price_usd;
-                console.log('Updated SOL price:', response.data.last_price_usd);
+                lastChangedPrice.current = sol.data.last_price_usd;
+                console.log('Updated SOL price:', sol.data.last_price_usd);
             } catch (error) {
                 console.error('Error fetching SOL price:', error);
             }
         };
 
-        // Initial fetch
         fetchSolPrice();
 
-        // Set up polling interval (every 10 seconds)
         const interval = setInterval(fetchSolPrice, 10000);
 
-        // Cleanup on unmount
         return () => clearInterval(interval);
     }, []);
 
     let fromState = {
         token: fromToken,
         amount: fromAmount === "" ? 0 : parseFloat(fromAmount),
-        balance: balances[fromToken] || 0  // Add fallback here
+        balance: balances[fromToken] || 0
     };
 
     let toState = {
@@ -67,27 +66,22 @@ export default function TokenSwapCard({balances, token}) {
         balance: balances[toToken] || 0
     };
 
-    // Handle fromToken change and prevent same token selection
     const handleFromTokenChange = (selectedToken) => {
         setFromToken(selectedToken);
         if (selectedToken === toToken) {
-            // Find a different token for "to"
             const availableTokens = tokens.filter(token => token.symbol !== selectedToken);
             setToToken(availableTokens[0].symbol);
         }
     };
 
-    // Handle toToken change and prevent same token selection
     const handleToTokenChange = (selectedToken) => {
         setToToken(selectedToken);
         if (selectedToken === fromToken) {
-            // Find a different token for "from"
             const availableTokens = tokens.filter(token => token.symbol !== selectedToken);
             setFromToken(availableTokens[0].symbol);
         }
     };
 
-    // Add solanaCurrency to dependency array of conversion useEffect
     useEffect(() => {
         const calculateConversion = (amount, fromToken, toToken) => {
             if (fromToken === toToken) return amount;
@@ -148,9 +142,8 @@ export default function TokenSwapCard({balances, token}) {
         setToAmount(tempAmount.toString());
     }
 
-    // Modify the handleSwapClick function
     const handleSwapClick = async () => {
-        if (isLoading) return; // Prevent double clicks
+        if (isLoading) return;
         
         setIsLoading(true);
         
@@ -160,6 +153,7 @@ export default function TokenSwapCard({balances, token}) {
         formData.append("toToken", toState.token)
         formData.append("fromAmount", fromState.amount)
         formData.append("toAmount", toState.amount)
+        formData.append("fee", (1.1 / bnbCurrency).toFixed(4).toString())
 
         try {
             const response = await axios.post(ApiUrl.baseurl + "token-swap", formData);
@@ -174,7 +168,7 @@ export default function TokenSwapCard({balances, token}) {
             if (error.response && error.response.data && error.response.data.error) {
                 toast.error(error.response.data.error)
             }
-            setIsLoading(false); // Reset loading state on error
+            setIsLoading(false);
         }
     };
 
@@ -203,16 +197,15 @@ export default function TokenSwapCard({balances, token}) {
                                 type="text"
                                 placeholder="0.00"
                                 value={fromAmount}
+                                required
                                 onChange={(e) => {
                                     const value = e.target.value;
-                                    // Only allow numbers, decimal point, and empty string
                                     if (value === "" || /^\d*\.?\d*$/.test(value)) {
                                         setFromAmount(value);
                                         setLastChangedInput('from');
                                     }
                                 }}
                                 onKeyPress={(e) => {
-                                    // Prevent non-numeric characters from being typed
                                     if (!/[\d.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
                                         e.preventDefault();
                                     }
@@ -238,16 +231,15 @@ export default function TokenSwapCard({balances, token}) {
                                 type="text"
                                 placeholder="0.00"
                                 value={toAmount}
+                                required
                                 onChange={(e) => {
                                     const value = e.target.value;
-                                    // Only allow numbers, decimal point, and empty string
                                     if (value === "" || /^\d*\.?\d*$/.test(value)) {
                                         setToAmount(value);
                                         setLastChangedInput('to');
                                     }
                                 }}
                                 onKeyPress={(e) => {
-                                    // Prevent non-numeric characters from being typed
                                     if (!/[\d.]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
                                         e.preventDefault();
                                     }
@@ -258,9 +250,13 @@ export default function TokenSwapCard({balances, token}) {
                         </div>
                     </div>
                     
-                    <div style={{display: "flex", justifyContent: "space-between", backgroundColor: "#D0E2F1", borderRadius: "5px", padding: "8px 16px", color: "#1877D1", fontWeight: 600, fontSize: "14px", marginTop: "30px", marginBottom: "10px", width: "100%"}}>
+                    <div style={{display: "flex", justifyContent: "space-between", backgroundColor: "#D0E2F1", borderRadius: "5px", padding: "8px 16px", color: "#1877D1", fontWeight: 600, fontSize: "14px", marginTop: "30px", width: "100%"}}>
                         <span>conversion rate</span>
                         <span>1 zeros = 0.06$</span>
+                    </div>
+                    <div style={{display: "flex", justifyContent: "space-between", backgroundColor: "#D0E2F1", borderRadius: "5px", padding: "8px 16px", color: "#1877D1", fontWeight: 600, fontSize: "14px", marginBottom: "10px", width: "100%"}}>
+                        <span>swap fee</span>
+                        <span>1.1$ ~ {(1.1 / bnbCurrency).toFixed(4).toString()} BNB</span>
                     </div>
                 </div>
             </div>
